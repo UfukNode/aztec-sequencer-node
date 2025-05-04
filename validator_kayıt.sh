@@ -16,16 +16,14 @@ read -p "> " ADDRESS
 
 echo -e "${CYAN}Validatör olarak kayıt olunuyor...${RESET}"
 
-aztec add-l1-validator \
-  --l1-rpc-urls $RPC \
-  --private-key $PRIVKEY \
-  --attester $ADDRESS \
-  --proposer-eoa $ADDRESS \
+output=$(aztec add-l1-validator \
+  --l1-rpc-urls "$RPC" \
+  --private-key "$PRVKEY" \
+  --attester "$PUBKEY" \
+  --proposer-eoa "$PUBKEY" \
   --staking-asset-handler 0xF739D03e98e23A7B65940848aBA8921fF3bAc4b2 \
-  --l1-chain-id 11155111
+  --l1-chain-id 11155111 2>&1)
 
-if [ $? -eq 0 ]; then
-  echo -e "\n${GREEN}✅ Başarıyla validator kaydı yapıldı.${RESET}"
-else
-  echo -e "\n${ORANGE}⚠️ Günlük limit dolmuş olabilir. Lütfen ertesi gün tekrar deneyin.${RESET}"
+if echo "$output" | grep -qi "invalid private key"; then
+    echo -e "${YELLOW}⚠ Günlük limit dolmuş olabilir. Lütfen ertesi gün tekrar deneyin.${RESET}"
 fi
