@@ -48,7 +48,7 @@ read -p "Cüzdan adresi girin (0x ile başlayan): " PUBKEY
 
 echo -e "${CYAN}Node başlatılıyor...${RESET}"
 
-cat > $HOME/start_ufuk_node.sh <<EOF
+cat > $HOME/start_aztec_node.sh <<EOF
 #!/bin/bash
 export PATH=\$PATH:\$HOME/.aztec/bin
 aztec start --node --archiver --sequencer \\
@@ -61,7 +61,7 @@ aztec start --node --archiver --sequencer \\
   --p2p.maxTxPoolSize 1000000000
 EOF
 
-chmod +x $HOME/start_ufuk_node.sh
-screen -dmS ufuk_node $HOME/start_ufuk_node.sh
+chmod +x $HOME/start_aztec_node.sh
+screen -dmS aztec $HOME/start_aztec_node.sh
 
-echo -e "${GREEN}Node başarıyla başlatıldı. screen -r ufuk_node komutuyla ekranı görebilirsin.${RESET}"
+echo -e "${GREEN}Node başarıyla başlatıldı. screen -r aztec komutuyla ekranı görebilirsin.${RESET}"
