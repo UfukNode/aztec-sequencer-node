@@ -18,7 +18,7 @@ echo -e "${GREEN}Script başlatılıyor: Ufuk tarafından hazırlanmıştır.${R
 sleep 2
 
 echo -e "${CYAN}Gerekli bağımlılıklar yükleniyor...${RESET}"
-sudo apt update && sudo apt install curl screen jq -y
+sudo apt update && sudo apt install curl wget screen jq -y
 
 echo -e "${CYAN}Docker kurulumu kontrol ediliyor...${RESET}"
 if ! command -v docker &> /dev/null; then
