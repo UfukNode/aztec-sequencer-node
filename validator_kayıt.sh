@@ -1,29 +1,24 @@
 #!/bin/bash
 
 ORANGE='\033[0;33m'
-GREEN='\033[1;32m'
-CYAN='\033[0;36m'
 RESET='\033[0m'
 
-echo -e "${CYAN}Sepolia RPC URL girin:${RESET}"
-read -p "> " RPC
+echo -e "${ORANGE}Validator olarak kayıt olunuyor...${RESET}"
 
-echo -e "${CYAN}Cüzdan private key girin (0x ile başlayan):${RESET}"
-read -p "> " PRVKEY
+read -p "Sepolia RPC URL girin: " RPC
+read -p "Cüzdan Private Key girin: " PRVKEY
+read -p "Cüzdan Adresi (0x ile başlayan): " PUBKEY
 
-echo -e "${CYAN}Validator cüzdan adresini girin (0x ile başlayan):${RESET}"
-read -p "> " ADDRESS
-
-echo -e "${CYAN}Validatör olarak kayıt olunuyor...${RESET}"
-
-output=$(aztec add-l1-validator \
-  --l1-rpc-urls "$RPC" \
-  --private-key "$PRVKEY" \
-  --attester "$PUBKEY" \
-  --proposer-eoa "$PUBKEY" \
+OUTPUT=$(aztec add-l1-validator \
+  --l1-rpc-urls $RPC \
+  --private-key $PRVKEY \
+  --attester $PUBKEY \
+  --proposer-eoa $PUBKEY \
   --staking-asset-handler 0xF739D03e98e23A7B65940848aBA8921fF3bAc4b2 \
   --l1-chain-id 11155111 2>&1)
 
-if echo "$output" | grep -qi "invalid private key"; then
-    echo -e "${YELLOW}⚠ Günlük limit dolmuş olabilir. Lütfen ertesi gün tekrar deneyin.${RESET}"
+if echo "$OUTPUT" | grep -q "Error\|error\|invalid\|stack"; then
+    echo -e "${ORANGE}⚠ Günlük limit dolmuş olabilir. Lütfen ertesi gün tekrar deneyin.${RESET}"
+else
+    echo -e "${ORANGE}✅ Validator kaydı başarılı oldu.${RESET}"
 fi
