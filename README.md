@@ -61,9 +61,12 @@ Tekrar bağlanmak için:
 screen -r aztec
 ```
 
+📌Screene gittiğinizde bir süre sonra aşağıdaki çıktıları almanız gerekiyor.
+![image](https://github.com/user-attachments/assets/4ffaa38a-cf09-4991-a356-817588952619)
+
 ## 3- Discord "Apprentice" Rolü Alma
 
-Node birkaç dakika çalıştıktan sonra aşağıdaki adımları izleyin:
+Node 5 dakika çalıştıktan sonra aşağıdaki adımları izleyin:
 
 ### A- Block Numarası Al
 
