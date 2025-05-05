@@ -8,10 +8,10 @@ Bu rehber, sadece birkaç adımda Aztec testnet ağı üzerinde Sequencer Node �
 
 | Gereksinim           | Detaylar                                |
 |----------------------|------------------------------------------|
-| RAM                  | En az 2 GB                              |
-| Depolama             | En az 15 GB SSD                         |
-| İşletim Sistemi      | Ubuntu 20.04 veya üzeri                 |
-| Cüzdan               | Sepolia ETH bulunan MetaMask cüzdanı   |
+| RAM                  | En az 16 GB                              |
+| CPU                  | 8 Çekirdek                               |
+| İşletim Sistemi      | Ubuntu 22.04 veya üzeri                 |
+| Depolama             | 1TB SSD                                |
 
 ## Sunucu Önerisi:
 
@@ -121,22 +121,6 @@ Script çalışırsa validator olarak kayıt olursunuz. Eğer günlük limit dol
 ⚠ Günlük limit dolmuş olabilir. Lütfen ertesi gün tekrar deneyin.
 ```
 
-## 5- Güncelleme ve Yeniden Başlatma
-
-Node yazılımını güncellemek için:
-
-```bash
-aztec-up alpha-testnet
-```
-
-Node’u yeniden başlatmak için:
-
-```bash
-screen -r aztec
-CTRL + C
-./start_aztec_node.sh
-```
-
 ---
 
-Sosyal Medya Hesabım: https://x.com/UfukDegen
+Ulaşmak ve Sorularınız İçin: https://x.com/UfukDegen
