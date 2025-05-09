@@ -48,7 +48,6 @@ docker run -d --name aztec-node \
   -p 8080:8080 -p 40400:40400 -p 40400:40400/udp \
   --add-host host.docker.internal:host-gateway \
   --user 0:0 \
-  --entrypoint aztecprotocol/aztec:0.85.0-alpha-testnet.8 \
   aztecprotocol/aztec:0.85.0-alpha-testnet.8 \
   node --no-warnings /usr/src/yarn-project/aztec/dist/bin/index.js start \
   --node --archiver --sequencer \
