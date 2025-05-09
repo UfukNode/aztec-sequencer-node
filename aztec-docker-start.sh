@@ -37,9 +37,10 @@ read -p "Beacon (consensus) URL girin: " BEACON
 read -p "Cüzdan private key girin: " PRVKEY
 read -p "Cüzdan adresi girin (0x ile başlayan): " PUBKEY
 
-echo -e "${CYAN}Node başlatılıyor...${RESET}"
-
+echo -e "${CYAN}Önceki container (varsa) siliniyor...${RESET}"
 docker rm -f aztec-node > /dev/null 2>&1
+
+echo -e "${CYAN}Node başlatılıyor...${RESET}"
 
 docker run -d --name aztec-node \
   -e HOME=/root \
@@ -49,7 +50,6 @@ docker run -d --name aztec-node \
   --add-host host.docker.internal:host-gateway \
   --user 0:0 \
   aztecprotocol/aztec:0.85.0-alpha-testnet.8 \
-  node --no-warnings /usr/src/yarn-project/aztec/dist/bin/index.js start \
   --node --archiver --sequencer \
   --network alpha-testnet \
   --l1-rpc-urls $RPC \
@@ -59,5 +59,5 @@ docker run -d --name aztec-node \
   --p2p.p2pIp $IP \
   --p2p.maxTxPoolSize 1000000000
 
-echo -e "${GREEN}Node başarıyla başlatıldı. Logları görmek için:${RESET}"
-echo -e "${CYAN}docker logs -f aztec-node${RESET}"
+echo -e "${GREEN}Node başarıyla başlatıldı.${RESET}"
+echo -e "${CYAN}Logları izlemek için: ${RESET}docker logs -f aztec-node"
