@@ -61,27 +61,6 @@ Tekrar bağlanmak için:
 screen -r aztec
 ```
 
----
-
-## Docker ile Node Kurulumu:
-
-Aşağıdaki komutu VPS'e girdikten sonra çalıştırın:
-
-```bash
-[ -f "aztec-docker-start.sh" ] && rm aztec-docker-start.sh; \
-apt update -y && apt install -y curl && \
-curl -sSL -o aztec-docker-start.sh https://raw.githubusercontent.com/UfukNode/aztec-sequencer-node/main/aztec-docker-start.sh && \
-chmod +x aztec-docker-start.sh && bash aztec-docker-start.sh
-````
-
-Logları Kontrol et:
-
-```bash
-docker logs -f aztec-node
-````
-
----
-
 📌Screene gittiğinizde bir süre sonra aşağıdaki çıktıları almanız gerekiyor.
 ![image](https://github.com/user-attachments/assets/4ffaa38a-cf09-4991-a356-817588952619)
 
