@@ -18,7 +18,7 @@ echo -e "${GREEN}Script başlatılıyor: Ufuk tarafından hazırlanmıştır.${R
 sleep 2
 
 echo -e "${CYAN}Gerekli bağımlılıklar yükleniyor...${RESET}"
-sudo apt update && sudo apt install curl wget screen jq -y
+sudo apt update && sudo apt install -y curl wget screen jq
 
 echo -e "${CYAN}Docker kurulumu kontrol ediliyor...${RESET}"
 if ! command -v docker &> /dev/null; then
@@ -26,13 +26,14 @@ if ! command -v docker &> /dev/null; then
   curl -fsSL https://get.docker.com -o get-docker.sh
   sh get-docker.sh
   rm get-docker.sh
+else
+  echo -e "${GREEN}Docker zaten kurulu.${RESET}"
 fi
-
-echo -e "${GREEN}Docker kurulumu tamamlandı.${RESET}"
 
 echo -e "${CYAN}Aztec CLI kuruluyor...${RESET}"
 curl -fsSL https://install.aztec.network | bash
 export PATH="$HOME/.aztec/bin:$PATH"
+echo 'export PATH="$HOME/.aztec/bin:$PATH"' >> ~/.bashrc
 
 echo -e "${CYAN}Testnet'e geçiliyor...${RESET}"
 aztec-up alpha-testnet
@@ -48,7 +49,8 @@ read -p "Cüzdan adresi girin (0x ile başlayan): " PUBKEY
 
 echo -e "${CYAN}Node başlatılıyor...${RESET}"
 
-cat > $HOME/start_aztec_node.sh <<EOF
+NODE_SCRIPT="$HOME/start_aztec_node.sh"
+cat > "$NODE_SCRIPT" <<EOF
 #!/bin/bash
 export PATH=\$PATH:\$HOME/.aztec/bin
 aztec start --node --archiver --sequencer \\
@@ -61,7 +63,12 @@ aztec start --node --archiver --sequencer \\
   --p2p.maxTxPoolSize 1000000000
 EOF
 
-chmod +x $HOME/start_aztec_node.sh
-screen -dmS aztec $HOME/start_aztec_node.sh
+chmod +x "$NODE_SCRIPT"
 
-echo -e "${GREEN}Node başarıyla başlatıldı. screen -r aztec komutuyla ekranı görebilirsin.${RESET}"
+# Daha önce açık bir screen varsa öldür
+screen -S aztec -X quit 2>/dev/null
+
+# Yeni bir screen oturumu başlat
+screen -dmS aztec bash "$NODE_SCRIPT"
+
+echo -e "${GREEN}Node başarıyla başlatıldı. \`screen -r aztec\` komutuyla ekranı görebilirsin.${RESET}"
