@@ -29,6 +29,7 @@ nvm install 20.17.0 && nvm use 20.17.0
 # Docker kurulumu
 echo -e "${CYAN}🐳 Docker kuruluyor...${RESET}"
 sudo install -m 0755 -d /etc/apt/keyrings
+sudo rm -f /etc/apt/keyrings/docker.gpg
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
