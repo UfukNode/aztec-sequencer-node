@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ORANGE='\033[0;33m'
 GREEN='\033[1;32m'
 CYAN='\033[0;36m'
 RESET='\033[0m'
@@ -13,55 +12,79 @@ echo "██    ██  █████   ██   ██  █████  "
 echo "██    ██  ██      ██   ██  ██  ██ "
 echo "████████  ██      ███████  ██   ██"
 echo -e "${RESET}"
-echo -e "${GREEN}Script başlatılıyor: Ufuk tarafından hazırlanmıştır.${RESET}"
-
+echo -e "${GREEN}Script hazırlanmıştır: Ufuk (@UfukDegen) tarafından 🌐${RESET}"
 sleep 2
 
-echo -e "${CYAN}Gerekli bağımlılıklar yükleniyor...${RESET}"
-sudo apt update && sudo apt install curl wget screen jq -y
+echo -e "${CYAN}📦 Gerekli paketler yükleniyor...${RESET}"
+sudo apt update && sudo apt install -y \
+  git curl wget build-essential cmake pkg-config libssl-dev \
+  ca-certificates gnupg lsb-release unzip apt-transport-https ufw
 
-echo -e "${CYAN}Docker kurulumu kontrol ediliyor...${RESET}"
-if ! command -v docker &> /dev/null; then
-  echo -e "${ORANGE}Docker bulunamadı, kurulum başlatılıyor...${RESET}"
-  curl -fsSL https://get.docker.com -o get-docker.sh
-  sh get-docker.sh
-  rm get-docker.sh
-fi
+# Node.js kurulumu
+echo -e "${CYAN}🧩 Node.js (20.17.0) kuruluyor...${RESET}"
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh"
+nvm install 20.17.0 && nvm use 20.17.0
 
-echo -e "${GREEN}Docker kurulumu tamamlandı.${RESET}"
+# Docker kurulumu
+echo -e "${CYAN}🐳 Docker kuruluyor...${RESET}"
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo usermod -aG docker $USER && newgrp docker
 
-echo -e "${CYAN}Aztec CLI kuruluyor...${RESET}"
-curl -fsSL https://install.aztec.network | bash
-export PATH="$HOME/.aztec/bin:$PATH"
+# UFW port izinleri
+echo -e "${CYAN}🛡️ Gerekli portlar açılıyor...${RESET}"
+sudo ufw allow 22/tcp
+sudo ufw allow 40400/tcp
+sudo ufw allow 40400/udp
+sudo ufw allow 8080/tcp
+sudo ufw --force enable
 
-echo -e "${CYAN}Testnet'e geçiliyor...${RESET}"
-aztec-up alpha-testnet
+# Kullanıcı bilgilerini al
+echo -e "${CYAN}🔑 Gerekli bilgileri girin:${RESET}"
+read -p "Ethereum RPC URL (ETHEREUM_HOSTS): " ETHEREUM_HOSTS
+read -p "Beacon (Consensus) URL (L1_CONSENSUS_HOST_URLS): " L1_CONSENSUS_HOST_URLS
+read -p "Validator Private Key (0x ile): " VALIDATOR_PRIVATE_KEY
+read -p "Validator Public Address (0x ile): " VALIDATOR_ADDRESS
 
-echo -e "${CYAN}IP adresi tespit ediliyor...${RESET}"
-IP=$(curl -s https://api.ipify.org)
-echo -e "${GREEN}Tespit edilen IP: $IP${RESET}"
+P2P_IP=$(curl -s ifconfig.me)
+echo -e "${CYAN}🌐 IP adresiniz otomatik tespit edildi: $P2P_IP${RESET}"
 
-read -p "Sepolia RPC URL girin: " RPC
-read -p "Beacon (consensus) URL girin: " BEACON
-read -p "Cüzdan private key girin: " PRVKEY
-read -p "Cüzdan adresi girin (0x ile başlayan): " PUBKEY"
+# Docker Compose klasörünü ve dosyasını oluştur
+mkdir -p ~/aztec-node/data && cd ~/aztec-node
 
-echo -e "${CYAN}Node başlatılıyor...${RESET}"
+cat > docker-compose.yml << EOL
+version: '3'
+services:
+  aztec-node:
+    container_name: aztec-sequencer
+    image: aztecprotocol/aztec:alpha-testnet
+    restart: unless-stopped
+    environment:
+      - ETHEREUM_HOSTS=${ETHEREUM_HOSTS}
+      - L1_CONSENSUS_HOST_URLS=${L1_CONSENSUS_HOST_URLS}
+      - DATA_DIRECTORY=/data
+      - VALIDATOR_PRIVATE_KEY=${VALIDATOR_PRIVATE_KEY}
+      - VALIDATOR_ADDRESS=${VALIDATOR_ADDRESS}
+      - P2P_IP=${P2P_IP}
+      - LOG_LEVEL=info
+    volumes:
+      - ./data:/data
+    ports:
+      - "40400:40400/tcp"
+      - "40400:40400/udp"
+      - "8080:8080/tcp"
+    entrypoint: >
+      sh -c 'node --no-warnings /usr/src/yarn-project/aztec/dest/bin/index.js start --network alpha-testnet --node --archiver --sequencer --p2p.maxTxPoolSize 1000000000'
+EOL
 
-cat > $HOME/start_aztec_node.sh <<EOF
-#!/bin/bash
-export PATH=\$PATH:\$HOME/.aztec/bin
-aztec start --node --archiver --sequencer \\
-  --network alpha-testnet \\
-  --l1-rpc-urls $RPC \\
-  --l1-consensus-host-urls $BEACON \\
-  --sequencer.validatorPrivateKey $PRVKEY \\
-  --sequencer.coinbase $PUBKEY \\
-  --p2p.p2pIp $IP \\
-  --p2p.maxTxPoolSize 1000000000
-EOF
+# Node'u başlat
+docker compose up -d
 
-chmod +x $HOME/start_aztec_node.sh
-screen -dmS aztec $HOME/start_aztec_node.sh
-
-echo -e "${GREEN}Node başarıyla başlatıldı. screen -r aztec komutuyla ekranı görebilirsin.${RESET}"
+echo -e "${GREEN}✅ Aztec Sequencer Node başlatıldı!${RESET}"
+echo -e "${CYAN}Logları görüntülemek için:\n${RESET}cd ~/aztec-node && docker compose logs -f"
