@@ -2,6 +2,7 @@
 
 ORANGE='\033[0;33m'
 GREEN='\033[1;32m'
+RED='\033[1;31m'
 CYAN='\033[0;36m'
 RESET='\033[0m'
 
@@ -44,7 +45,7 @@ echo -e "${GREEN}Tespit edilen IP: $IP${RESET}"
 
 read -p "Sepolia RPC URL girin: " RPC
 read -p "Beacon (consensus) URL girin: " BEACON
-read -p "Cüzdan private key girin: " PRVKEY
+read -p "Cüzdan private key girin (0x olmadan): " PRVKEY
 read -p "Cüzdan adresi girin (0x ile başlayan): " PUBKEY
 
 echo -e "${CYAN}Node başlatılıyor...${RESET}"
@@ -65,10 +66,17 @@ EOF
 
 chmod +x "$NODE_SCRIPT"
 
-# Daha önce açık bir screen varsa öldür
+# Önceki oturumu kapat
 screen -S aztec -X quit 2>/dev/null
 
-# Yeni bir screen oturumu başlat
-screen -dmS aztec bash "$NODE_SCRIPT"
+# Screen içinde çalıştır ve log tut
+screen -dmS aztec bash -c "$NODE_SCRIPT >> \$HOME/aztec.log 2>&1"
 
-echo -e "${GREEN}Node başarıyla başlatıldı. \`screen -r aztec\` komutuyla ekranı görebilirsin.${RESET}"
+# 2 saniye bekleyip screen gerçekten çalışıyor mu diye kontrol
+sleep 2
+if screen -list | grep -q aztec; then
+  echo -e "${GREEN}Node başlatma komutu gönderildi. Kontrol için:\n - screen -r aztec\n - tail -f \$HOME/aztec.log${RESET}"
+else
+  echo -e "${RED}Node ekranı başlatılamadı! Muhtemelen girdiğiniz RPC, Beacon veya Private Key hatalı.${RESET}"
+  echo -e "${ORANGE}Lütfen şu dosyadaki hataları kontrol edin: \$HOME/aztec.log${RESET}"
+fi
