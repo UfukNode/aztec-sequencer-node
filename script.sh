@@ -58,7 +58,6 @@ aztec start --node --archiver --sequencer \
   --sequencer.validatorPrivateKey $PRVKEY \
   --sequencer.coinbase $PUBKEY \
   --p2p.p2pIp $IP \
-  --p2p.p2pPort 40400 \
   --p2p.maxTxPoolSize 1000000000
 EOF
 
