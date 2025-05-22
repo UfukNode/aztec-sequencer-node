@@ -126,10 +126,6 @@ Script çalışırsa validator olarak kayıt olursunuz. Eğer günlük limit dol
 
 ---
 
-Elbette Ufuk! İşte repoya doğrudan ekleyebileceğin, **“Güncelleme Talimatları”** başlığı altında yer alacak şekilde sade ve anlaşılır bir markdown formatında yazılmış bölüm:
-
----
-
 ### 🔄 Güncelleme Talimatı
 
 Herhangi bir yeni Aztec sürüm güncellemesinde aşağıdaki adımları uygulayarak node’unuzu güvenli şekilde güncelleyebilirsiniz:
