@@ -126,4 +126,44 @@ Script çalışırsa validator olarak kayıt olursunuz. Eğer günlük limit dol
 
 ---
 
+Elbette Ufuk! İşte repoya doğrudan ekleyebileceğin, **“Güncelleme Talimatları”** başlığı altında yer alacak şekilde sade ve anlaşılır bir markdown formatında yazılmış bölüm:
+
+---
+
+### 🔄 Güncelleme Talimatı
+
+Herhangi bir yeni Aztec sürüm güncellemesinde aşağıdaki adımları uygulayarak node’unuzu güvenli şekilde güncelleyebilirsiniz:
+
+#### 1. Screen’e Git ve Node’u Durdur
+
+```bash
+screen -r aztec
+```
+
+Ekrana geçtikten sonra:
+```bash
+CTRL + C
+```
+ile node’u durdurun.
+
+---
+
+#### 2. Verileri Temizle
+
+Sadece veriyi temizlemeniz yeterlidir (config’ler silinmez):
+```bash
+rm -rf ~/.aztec/alpha-testnet/data/
+```
+
+---
+
+#### 3. Node’u Yeniden Başlat
+
+Aşağıdaki kurulum komutunu tekrar çalıştırabilirsiniz:
+```bash
+[ -f "script.sh" ] && rm script.sh; apt update -y && apt install curl -y && curl -sSL -o script.sh https://raw.githubusercontent.com/UfukNode/aztec-sequencer-node/refs/heads/main/script.sh && chmod +x script.sh && ./script.sh
+```
+
+---
+
 Ulaşmak ve Sorularınız İçin: https://x.com/UfukDegen
