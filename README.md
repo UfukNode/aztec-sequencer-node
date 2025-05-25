@@ -115,7 +115,7 @@ Gelen uzun çıktı proof’tur, hepsini kopyalayın.
 Node senkronize olduktan sonra aşağıdaki komutla validator olarak kayıt olabilirsiniz:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/UfukNode/aztec-sequencer-node/main/validator_kayıt.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/UfukNode/aztec-sequencer-node/main/validator_kayit.sh)"
 ```
 
 Script çalışırsa validator olarak kayıt olursunuz. Eğer günlük limit doluysa şu mesaj gösterilir:
