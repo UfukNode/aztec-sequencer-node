@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ORANGE='\033[0;33m'
+GREEN='\033[1;32m'
 RESET='\033[0m'
 
 echo -e "${ORANGE}Validator olarak kayıt olunuyor...${RESET}"
@@ -27,5 +28,5 @@ if echo "$OUTPUT" | grep -qi "ValidatorQuotaFilledUntil"; then
 elif echo "$OUTPUT" | grep -qi "Error\|invalid\|stack"; then
     echo -e "${ORANGE}⚠ Bir hata oluştu. Girdiğiniz bilgileri kontrol edin.${RESET}"
 else
-    echo -e "${ORANGE}✅ Validator kaydı başarılı oldu.${RESET}"
+    echo -e "${GREEN}✅ Validator kaydı başarılı oldu.${RESET}"
 fi
