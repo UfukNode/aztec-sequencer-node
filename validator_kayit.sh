@@ -19,12 +19,12 @@ OUTPUT=$(aztec add-l1-validator \
   --l1-chain-id 11155111 2>&1)
 
 if echo "$OUTPUT" | grep -qi "ValidatorQuotaFilledUntil"; then
-    TS=$(echo "$OUTPUT" | grep -oE 'ValidatorQuotaFilledUntil\([0-9]+\)' | grep -oE '[0-9]+' | head -n1)
-    HUMAN_TIME=$(TZ=Europe/Istanbul date -d "@$TS" "+%d %B %Y %H:%M:%S %Z")
-    echo -e "${ORANGE}⚠ Günlük validator limiti dolmuş olabilir.${RESET}"
-    echo -e "${GREEN}⏳ Bir sonraki deneme zamanı (TR saatiyle): $HUMAN_TIME${RESET}"
+  TS=$(echo "$OUTPUT" | grep -oE 'ValidatorQuotaFilledUntil\([0-9]+\)' | grep -oE '[0-9]+' | head -n1)
+  HUMAN_TIME=$(date -d "@$TS" "+%d %B %Y %H:%M:%S %Z" TZ="Europe/Istanbul")
+  echo -e "${ORANGE}⚠ Günlük validator limiti dolmuş olabilir.${RESET}"
+  echo -e "${GREEN}⏳ Bir sonraki deneme zamanı (TR saatiyle): $HUMAN_TIME${RESET}"
 elif echo "$OUTPUT" | grep -qi "Error\|invalid\|stack"; then
-    echo -e "${ORANGE}⚠ Bir hata oluştu. Girdiğiniz bilgileri kontrol edin.${RESET}"
+  echo -e "${ORANGE}⚠ Bir hata oluştu. Girdiğiniz bilgileri kontrol edin.${RESET}"
 else
-    echo -e "${GREEN}✅ Validator kaydı başarılı oldu.${RESET}"
+  echo -e "${GREEN}✅ Validator kaydı başarılı oldu.${RESET}"
 fi
