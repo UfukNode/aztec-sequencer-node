@@ -22,7 +22,8 @@ OUTPUT=$(aztec add-l1-validator \
 if echo "$OUTPUT" | grep -qi "ValidatorQuotaFilledUntil"; then
     TS=$(echo "$OUTPUT" | grep -oE 'ValidatorQuotaFilledUntil\([0-9]+\)' | grep -oE '[0-9]+' | head -n1)
     HUMAN_TIME=$(date -d "@$TS" "+%d %B %Y %H:%M:%S %Z")
-    echo -e "${ORANGE}⚠ Günlük validator limiti dolmuş olabilir. Bir sonraki deneme zamanı: $HUMAN_TIME${RESET}"
+    echo -e "${ORANGE}⚠ Günlük validator limiti dolmuş olabilir.${RESET}"
+    echo -e "${GREEN}⏳ Bir sonraki deneme zamanı: $HUMAN_TIME${RESET}"
 elif echo "$OUTPUT" | grep -qi "Error\|invalid\|stack"; then
     echo -e "${ORANGE}⚠ Bir hata oluştu. Girdiğiniz bilgileri kontrol edin.${RESET}"
 else
