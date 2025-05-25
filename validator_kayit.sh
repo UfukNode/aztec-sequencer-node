@@ -7,8 +7,8 @@ RESET='\033[0m'
 echo -e "${ORANGE}Validator olarak kayıt olunuyor...${RESET}"
 
 read -p "Sepolia RPC URL girin: " RPC
-read -p "Cüzdan Private Key girin (0x ile başlayacak): " PRVKEY
-read -p "Cüzdan Adresi (0x ile başlayacak): " PUBKEY
+read -p "Cüzdan Private Key girin: " PRVKEY
+read -p "Cüzdan Adresi: " PUBKEY
 
 OUTPUT=$(aztec add-l1-validator \
   --l1-rpc-urls $RPC \
